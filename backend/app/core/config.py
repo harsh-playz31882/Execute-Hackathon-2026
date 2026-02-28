@@ -16,7 +16,3 @@ settings = Settings()
 
 
 __all__ = ["settings"]
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes

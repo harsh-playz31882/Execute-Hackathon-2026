@@ -93,7 +93,3 @@ def list_my_assets(
 
 
 __all__ = ["router"]
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes

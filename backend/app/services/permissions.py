@@ -26,7 +26,3 @@ def ensure_asset_owner(user: models.User, asset: models.EnergyAsset) -> None:
 
 
 __all__ = ["require_role", "ensure_asset_owner"]
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
