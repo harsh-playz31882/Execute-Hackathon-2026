@@ -17,7 +17,7 @@ For the hackathon prototype, we focus on a **simple but end‑to‑end working m
 
 - **User onboarding with roles**
   - Register as **Producer**, **Consumer**, or **Investor**.
-  - Secure login using **JWT tokens** (FastAPI security).
+  - Secure login (FastAPI security).
 
 - **Energy asset listings (Marketplace)**
   - Producers can create and manage **energy assets**  
