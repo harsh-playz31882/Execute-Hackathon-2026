@@ -165,36 +165,7 @@ This provides a **transparent, peer‑to‑peer discovery and matching mechanism
 
 ---
 
-### 8. How to Run and Test (Backend)
 
-#### 8.1 Start the API Server
-
-From the project root:
-
-```bash
-uvicorn backend.app.main:app --reload
-```
-
-This will:
-- Initialize the SQLite database (`init_db()`).
-- Expose the API on `http://127.0.0.1:8000`.
-
-#### 8.2 Use Interactive Docs
-
-Open:
-
-- `http://127.0.0.1:8000/docs`
-
-For Testing Purpose:
-- Register users (`POST /api/v1/auth/register`)
-- Login and get JWT token (`POST /api/v1/auth/login`)
-- Authorize in Swagger UI using the token
-- Create/list assets (`/api/v1/assets`)
-- Create/list interests (`/api/v1/interests`)
-
-Every successful call writes data into the **SQLite database**.
-
----
 
 ### 9. Team Workflow & Branching (Git)
 
