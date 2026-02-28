@@ -1,6 +1,6 @@
 ## Execute Hackathon 2026 – Renewable Energy Marketplace Portal
 
-### 1. Problem Statement (High Level)
+### 1. Problem Statement
 
 Design a **web platform that connects renewable energy producers** (solar rooftop owners, biogas plants, wind farms, etc.) **with consumers or investors**.
 
@@ -40,7 +40,7 @@ The focus is on a **clean, minimal API** and **clear separation of concerns**, s
 
 - **Frontend**
   - HTML, CSS (basic, functional UI)
-  - Optional lightweight JavaScript for calling APIs
+  - lightweight JavaScript for calling APIs
 
 - **Backend**
   - **Python** + **FastAPI** (REST API + docs)
@@ -125,7 +125,7 @@ backend/
       permissions.py        # Role & ownership checks (producer‑only actions)
 ```
 
-This structure keeps the **business logic, HTTP layer, and persistence layer cleanly separated**, which is ideal for a team project.
+This structure keeps the **business logic, HTTP layer, and persistence layer cleanly separated**.
 
 ---
 
@@ -185,14 +185,14 @@ Open:
 
 - `http://127.0.0.1:8000/docs`
 
-From there you can:
+For Testing Purpose:
 - Register users (`POST /api/v1/auth/register`)
 - Login and get JWT token (`POST /api/v1/auth/login`)
 - Authorize in Swagger UI using the token
 - Create/list assets (`/api/v1/assets`)
 - Create/list interests (`/api/v1/interests`)
 
-Every successful call writes data into the **SQLite database**, demonstrating full integration.
+Every successful call writes data into the **SQLite database**.
 
 ---
 
@@ -216,12 +216,9 @@ This workflow keeps **frontend and backend work decoupled** while still aligning
 
 ---
 
-### 10. Future Enhancements (Beyond MVP)
+### 10. Future Enhancements
 
 - Add **real‑time updates** or notifications when interests are accepted.
 - Add **pricing analytics** (average tariffs, capacity utilization).
 - Integrate a **payment gateway** or escrow logic for energy contracts.
 - Add **community features** (ratings, reviews, local energy communities).
-
-Even without these extras, the current prototype already demonstrates the **core value proposition**:  
-connecting decentralized renewable energy resources with interested consumers and investors through a clean, working marketplace platform.
