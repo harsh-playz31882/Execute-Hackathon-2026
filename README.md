@@ -189,7 +189,5 @@ This workflow keeps **frontend and backend work decoupled** while still aligning
 
 ### 10. Future Enhancements
 
-- Add **real‑time updates** or notifications when interests are accepted.
 - Add **pricing analytics** (average tariffs, capacity utilization).
-- Integrate a **payment gateway** or escrow logic for energy contracts.
-- Add **community features** (ratings, reviews, local energy communities).
+
