@@ -75,7 +75,7 @@ async function getMe() {
 /* Assets */
 async function listAssets(params = {}) {
   const q = new URLSearchParams(params).toString();
-  return fetchJson('/assets' + (q ? '?' + q : ''));
+  return fetchJson('/assets/' + (q ? '?' + q : ''));
 }
 
 async function getAsset(id) {
@@ -83,7 +83,7 @@ async function getAsset(id) {
 }
 
 async function createAsset(body) {
-  return fetchJson('/assets', { method: 'POST', body: JSON.stringify(body) });
+  return fetchJson('/assets/', { method: 'POST', body: JSON.stringify(body) });
 }
 
 async function updateAsset(id, body) {
@@ -96,7 +96,7 @@ async function listMyAssets() {
 
 /* Interests */
 async function createInterest(assetId, message) {
-  return fetchJson('/interests', {
+  return fetchJson('/interests/', {
     method: 'POST',
     body: JSON.stringify({ asset_id: assetId, message: message || '' }),
   });
