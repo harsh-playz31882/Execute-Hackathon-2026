@@ -12,7 +12,8 @@ from ..db.database import get_db
 from .config import settings
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Use sha256_crypt for hackathon demo to avoid bcrypt backend issues.
+pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
 # This must match the token URL of the login endpoint
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")

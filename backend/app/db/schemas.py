@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 
 
 # ---------
@@ -16,7 +16,8 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password: str
+    # bcrypt (used by passlib) supports up to 72 bytes safely
+    password: constr(min_length=6, max_length=72)
 
 
 class UserLogin(BaseModel):
