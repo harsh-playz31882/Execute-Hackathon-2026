@@ -1,0 +1,78 @@
+/* Root landing page stylesheet: index.css
+	 Provides a clean, responsive layout that complements the existing markup.
+*/
+:root{
+	--bg: #0f1724;
+	--card: #0b1220;
+	--muted: #9aa4b2;
+	--accent: #6ee7b7;
+	--accent-2: #60a5fa;
+	--glass: rgba(255,255,255,0.04);
+	--radius: 12px;
+	--max-width: 1100px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+	margin:0;
+	font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	background: linear-gradient(180deg,var(--bg) 0%, #071022 100%);
+	color: #e6eef6;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+	line-height:1.45;
+}
+
+.app-shell{max-width:var(--max-width);margin:36px auto;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:16px}
+
+/* Header */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;margin-bottom:18px}
+.app-logo{display:flex;align-items:center;gap:12px}
+.logo-dot{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(80,90,120,0.12)}
+.logo-dot-inner{font-weight:700;color:#04202b}
+.app-title-main{display:block;font-weight:700;font-size:1.05rem}
+.app-title-sub{display:block;font-size:0.78rem;color:var(--muted)}
+
+.nav{display:flex;gap:12px;align-items:center}
+.nav-link{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
+.nav-link.active,.nav-link:hover{background:var(--glass);color:var(--accent-2)}
+
+/* Layout */
+.layout-two-column{display:grid;grid-template-columns:1fr 380px;gap:22px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,0.015),transparent);padding:18px;border-radius:var(--radius);box-shadow:0 8px 24px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+.panel.secondary{opacity:0.98}
+.panel-header{margin-bottom:12px}
+
+.hero-title{font-size:1.6rem;margin:0 0 8px 0;color:#fff}
+.hero-subtitle{color:var(--muted);margin:0}
+
+.form-actions{margin-top:18px}
+.btn{display:inline-block;padding:10px 16px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04202b;text-decoration:none;font-weight:700;box-shadow:0 8px 20px rgba(96,165,250,0.12)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent-2)}
+.muted-link{color:var(--muted);font-size:0.92rem}
+.alert{padding:10px 12px;border-radius:10px;background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.06);color:var(--accent-2)}
+
+/* Cards grid */
+.list-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.card-title{font-weight:700}
+.card-meta{color:var(--muted);font-size:0.92rem}
+.badge{padding:6px 8px;border-radius:999px;font-weight:700;font-size:0.75rem;background:rgba(255,255,255,0.03)}
+.badge-role{background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));color:var(--accent)}
+
+/* Responsive */
+@media (max-width:900px){
+	.layout-two-column{grid-template-columns:1fr;}
+	.list-grid{grid-template-columns:1fr}
+	.app-shell{margin:18px;padding:16px}
+	.logo-dot{width:48px;height:48px}
+	.hero-title{font-size:1.35rem}
+}
+
+/* Utility */
+.muted{color:var(--muted)}
+
+/* Small tweaks to existing classes for compatibility with other CSS files */
+.panel-body p{margin:0}

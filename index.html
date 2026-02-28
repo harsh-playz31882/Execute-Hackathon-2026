@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Execute Marketplace | Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <main>
+      <div class="app-shell">
+        <header class="app-header">
+          <div class="app-logo">
+            <div class="logo-dot">
+              <div class="logo-dot-inner">EX</div>
+            </div>
+            <div class="app-title">
+              <span class="app-title-main">Execute Marketplace</span>
+              <span class="app-title-sub">Connect producers and consumers with confidence</span>
+            </div>
+          </div>
+          <nav class="nav">
+            <a class="nav-link active" href="/index.html">Home</a>
+            <a class="nav-link" href="/marketplace.html">Marketplace</a>
+            <a class="nav-link" href="/login.html">Log in</a>
+            <a class="nav-link" href="/register.html">Register</a>
+          </nav>
+        </header>
+
+        <section class="layout-two-column">
+          <section class="panel">
+            <header class="panel-header">
+              <div>
+                <h1 class="hero-title">A lightweight marketplace for your hackathon assets</h1>
+                <p class="hero-subtitle">
+                  Producers list datasets, prompts, models, or APIs. Consumers discover and express interest with a
+                  single click. Simple, opinionated, and ready for demo.
+                </p>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="form-actions">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                  <a class="btn" href="/register.html">Get started</a>
+                  <a class="btn btn-ghost" href="/marketplace.html">Browse marketplace</a>
+                </div>
+                <p class="muted-link">
+                  Already have an account?
+                  <a href="/login.html">Log in</a>
+                </p>
+              </div>
+              <div class="alert alert-info" style="margin-top: 14px">
+                <small>
+                  This is a minimal reference UI. All data is stored in a local SQLite DB from the backend, which makes
+                  it easy to reset between demos.
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel secondary">
+            <header class="panel-header">
+              <div>
+                <div class="panel-title">What you can do here</div>
+                <div class="panel-subtitle">Two roles, a single streamlined flow.</div>
+              </div>
+            </header>
+            <div class="panel-body">
+              <div class="list-grid">
+                <article class="card">
+                  <div class="card-header">
+                    <div>
+                      <div class="card-title">Producers</div>
+                      <div class="card-meta">Teams exposing datasets, APIs, or tools.</div>
+                    </div>
+                    <span class="badge badge-role">Producer</span>
+                  </div>
+                  <p class="card-meta">
+                    - Create and manage assets<br />
+                    - See interests from consumers<br />
+                    - Accept or reject interest
+                  </p>
+                </article>
+                <article class="card">
+                  <div class="card-header">
+                    <div>
+                      <div class="card-title">Consumers</div>
+                      <div class="card-meta">Teams looking to build on top of assets.</div>
+                    </div>
+                    <span class="badge badge-role">Consumer</span>
+                  </div>
+                  <p class="card-meta">
+                    - Browse marketplace<br />
+                    - Send interest to producers<br />
+                    - Track sent/received responses
+                  </p>
+                </article>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+    <script type="module">
+      // If already authenticated, offer quick navigation to dashboard
+      import { getCurrentUser } from "/assets/js/auth.js";
+      const user = getCurrentUser();
+      if (user) {
+        const link = document.createElement("p");
+        link.className = "muted-link";
+        link.style.marginTop = "10px";
+        link.innerHTML =
+          'You are logged in as <strong>' +
+          user.full_name +
+          "</strong>. <a href=\"/dashboard.html\">Go to dashboard</a>.";
+        document.querySelector(".panel-body")?.appendChild(link);
+      }
+    </script>
+  </body>
+</html>
+
