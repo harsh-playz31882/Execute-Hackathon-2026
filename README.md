@@ -51,7 +51,7 @@ The focus is on a **clean, minimal API** and **clear separation of concerns**, s
 
 ---
 
-### 4. System Architecture (High Level)
+### 4. System Architecture 
 
 **Logical components:**
 
