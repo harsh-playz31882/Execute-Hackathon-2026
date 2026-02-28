@@ -67,4 +67,7 @@ def read_users_me(
 
 
 __all__ = ["router"]
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

@@ -123,4 +123,7 @@ __all__ = [
     "TradeInterestUpdate",
     "TradeInterestOut",
 ]
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

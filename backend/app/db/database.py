@@ -42,4 +42,7 @@ def init_db() -> None:
     from . import models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

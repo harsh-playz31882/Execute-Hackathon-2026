@@ -82,4 +82,7 @@ __all__ = [
     "EnergyAsset",
     "TradeInterest",
 ]
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
