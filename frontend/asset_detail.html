@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Details — Green Energy Market</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🌱 Green Energy Market</a>
+      <nav class="nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="content">
+      <p>Loading...</p>
+    </div>
+    <div id="interestForm" style="display:none;" class="form-section mb-2">
+      <h2>Express Interest</h2>
+      <div id="alert" class="alert" style="display:none;"></div>
+      <form id="form">
+        <div class="form-group">
+          <label for="message">Message (optional)</label>
+          <textarea id="message" name="message" placeholder="Introduce yourself or ask a question"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Interest</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    if (!id) {
+      document.getElementById('content').innerHTML = '<p class="alert alert-error">Invalid asset ID.</p>';
+    } else {
+      getAsset(parseInt(id)).then(asset => {
+        const badgeClass = 'badge-' + (asset.asset_type || 'solar');
+        document.getElementById('content').innerHTML = `
+          <div class="card" style="max-width:600px;">
+            <span class="badge ${badgeClass}">${asset.asset_type}</span>
+            <h1 class="page-title">${asset.capacity_kw} kW — ${asset.location}</h1>
+            <div class="meta">Price: ₹${asset.price_per_unit} per unit</div>
+            ${asset.description ? `<p>${asset.description}</p>` : ''}
+            <a href="marketplace.html" class="btn btn-secondary" style="margin-top:1rem;">← Back to Marketplace</a>
+          </div>
+        `;
+        if (isLoggedIn()) {
+          document.getElementById('interestForm').style.display = 'block';
+          document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const alertEl = document.getElementById('alert');
+            try {
+              await createInterest(asset.id, document.getElementById('message').value.trim());
+              alertEl.className = 'alert alert-success';
+              alertEl.textContent = 'Interest sent successfully!';
+              alertEl.style.display = 'block';
+              document.getElementById('form').reset();
+            } catch (err) {
+              alertEl.className = 'alert alert-error';
+              alertEl.textContent = err.message || 'Failed to send interest.';
+              alertEl.style.display = 'block';
+            }
+          });
+        }
+      }).catch(err => {
+        document.getElementById('content').innerHTML = '<p class="alert alert-error">' + (err.message || 'Asset not found') + '</p>';
+      });
+    }
+  </script>
+</body>
+</html>

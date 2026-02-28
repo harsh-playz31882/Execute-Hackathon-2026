@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add/Edit Asset — Green Energy Market</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🌱 Green Energy Market</a>
+      <nav class="nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="interests.html">Interests</a>
+        <a href="#" id="logout" class="btn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="form-section">
+      <h2 id="formTitle">Add Energy Asset</h2>
+      <div id="alert" class="alert" style="display:none;"></div>
+      <form id="assetForm">
+        <div class="form-group">
+          <label for="asset_type">Type</label>
+          <select id="asset_type" name="asset_type" required>
+            <option value="solar">Solar</option>
+            <option value="wind">Wind</option>
+            <option value="biogas">Biogas</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="capacity_kw">Capacity (kW)</label>
+          <input type="number" id="capacity_kw" name="capacity_kw" required min="0" step="0.1" placeholder="e.g. 10.5">
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" required placeholder="e.g. Pune">
+        </div>
+        <div class="form-group">
+          <label for="price_per_unit">Price per unit (₹)</label>
+          <input type="number" id="price_per_unit" name="price_per_unit" required min="0" step="0.01" placeholder="e.g. 5.5">
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="Brief description of your asset"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    function redirectToLogin() {
+      window.location.href = 'login.html';
+    }
+    document.getElementById('logout').addEventListener('click', (e) => {
+      e.preventDefault();
+      clearToken();
+      redirectToLogin();
+    });
+    if (!isLoggedIn()) {
+      redirectToLogin();
+    } else {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      const isEdit = !!id;
+      if (isEdit) {
+        document.getElementById('formTitle').textContent = 'Edit Asset';
+        document.getElementById('submitBtn').textContent = 'Update';
+        getAsset(parseInt(id)).then(a => {
+          document.getElementById('asset_type').value = a.asset_type || 'solar';
+          document.getElementById('capacity_kw').value = a.capacity_kw;
+          document.getElementById('location').value = a.location || '';
+          document.getElementById('price_per_unit').value = a.price_per_unit;
+          document.getElementById('description').value = a.description || '';
+        }).catch(() => redirectToLogin());
+      }
+      document.getElementById('assetForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const alertEl = document.getElementById('alert');
+        const body = {
+          asset_type: document.getElementById('asset_type').value,
+          capacity_kw: parseFloat(document.getElementById('capacity_kw').value),
+          location: document.getElementById('location').value.trim(),
+          price_per_unit: parseFloat(document.getElementById('price_per_unit').value),
+          description: document.getElementById('description').value.trim() || null,
+        };
+        try {
+          if (isEdit) {
+            await updateAsset(parseInt(id), body);
+            alertEl.className = 'alert alert-success';
+            alertEl.textContent = 'Asset updated!';
+          } else {
+            await createAsset(body);
+            alertEl.className = 'alert alert-success';
+            alertEl.textContent = 'Asset created!';
+          }
+          alertEl.style.display = 'block';
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        } catch (err) {
+          alertEl.className = 'alert alert-error';
+          alertEl.textContent = err.message || 'Failed to save.';
+          alertEl.style.display = 'block';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

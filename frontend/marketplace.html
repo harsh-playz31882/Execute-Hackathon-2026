@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace — Green Energy Market</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🌱 Green Energy Market</a>
+      <nav class="nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="btn">Login</a>
+        <a href="register.html" class="btn">Register</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="page-title">Energy Assets Marketplace</h1>
+    <div class="filter-bar mb-2">
+      <select id="assetType">
+        <option value="">All types</option>
+        <option value="solar">Solar</option>
+        <option value="wind">Wind</option>
+        <option value="biogas">Biogas</option>
+      </select>
+      <input type="text" id="location" placeholder="Filter by location">
+      <button type="button" class="btn btn-primary" id="applyFilter">Apply</button>
+    </div>
+    <div id="assetsList" class="card-grid">
+      <p class="text-center">Loading...</p>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    async function loadAssets() {
+      const type = document.getElementById('assetType').value;
+      const location = document.getElementById('location').value.trim();
+      const params = {};
+      if (type) params.asset_type = type;
+      if (location) params.location = location;
+      try {
+        const data = await listAssets(params);
+        const el = document.getElementById('assetsList');
+        if (!data || data.length === 0) {
+          el.innerHTML = '<p class="text-center">No assets found.</p>';
+          return;
+        }
+        el.innerHTML = data.map(a => `
+          <div class="card">
+            <span class="badge badge-${a.asset_type}">${a.asset_type}</span>
+            <h3>${a.capacity_kw} kW</h3>
+            <div class="meta">${a.location}</div>
+            <div class="price">₹${a.price_per_unit}/unit</div>
+            ${a.description ? `<p style="margin-top:0.5rem;font-size:0.9rem;">${a.description}</p>` : ''}
+            <a href="asset_detail.html?id=${a.id}" class="btn btn-primary" style="margin-top:1rem;display:inline-block;">View details</a>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('assetsList').innerHTML =
+          '<p class="alert alert-error">' + (err.message || 'Failed to load assets') + '</p>';
+      }
+    }
+    document.getElementById('applyFilter').addEventListener('click', loadAssets);
+    loadAssets();
+  </script>
+</body>
+</html>

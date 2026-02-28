@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Green Energy Market</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🌱 Green Energy Market</a>
+      <nav class="nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="login.html" class="btn">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="form-section">
+      <h2>Create Account</h2>
+      <div id="alert" class="alert" style="display:none;"></div>
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" name="full_name" required placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="role">I am a</label>
+          <select id="role" name="role" required>
+            <option value="producer">Producer (sell energy)</option>
+            <option value="consumer">Consumer (buy energy)</option>
+            <option value="investor">Investor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="password">Password (6–72 chars)</label>
+          <input type="password" id="password" name="password" required minlength="6" maxlength="72" placeholder="At least 6 characters">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </form>
+      <p class="form-footer">
+        Already have an account? <a href="login.html">Login</a>
+      </p>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const alertEl = document.getElementById('alert');
+      const body = {
+        full_name: document.getElementById('full_name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        role: document.getElementById('role').value,
+        password: document.getElementById('password').value,
+      };
+      try {
+        await register(body);
+        alertEl.className = 'alert alert-success';
+        alertEl.textContent = 'Registration successful! Redirecting to login...';
+        alertEl.style.display = 'block';
+        setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+      } catch (err) {
+        alertEl.className = 'alert alert-error';
+        alertEl.textContent = err.message || 'Registration failed.';
+        alertEl.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

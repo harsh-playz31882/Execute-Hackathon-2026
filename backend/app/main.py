@@ -1,10 +1,15 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .api.v1.routes_assets import router as assets_router
 from .api.v1.routes_auth import router as auth_router
 from .api.v1.routes_interests import router as interests_router
 from .db.database import init_db
+
+FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
 
 def create_app() -> FastAPI:
@@ -31,6 +36,10 @@ def create_app() -> FastAPI:
     app.include_router(auth_router, prefix="/api/v1/auth", tags=["auth"])
     app.include_router(assets_router, prefix="/api/v1/assets", tags=["assets"])
     app.include_router(interests_router, prefix="/api/v1/interests", tags=["interests"])
+
+    # Serve frontend (HTML, CSS, JS) – mount last so API routes take precedence
+    if FRONTEND_DIR.exists():
+        app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
     return app
 

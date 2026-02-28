@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Green Energy Market</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🌱 Green Energy Market</a>
+      <nav class="nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="interests.html">Interests</a>
+        <a href="#" id="logout" class="btn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="alert" class="alert" style="display:none;"></div>
+    <h1 class="page-title">Dashboard</h1>
+    <div id="content">
+      <p>Loading...</p>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    function redirectToLogin() {
+      window.location.href = 'login.html';
+    }
+    document.getElementById('logout').addEventListener('click', (e) => {
+      e.preventDefault();
+      clearToken();
+      redirectToLogin();
+    });
+    if (!isLoggedIn()) {
+      redirectToLogin();
+    } else {
+      (async () => {
+        try {
+          const user = await getMe();
+          let html = '<p><strong>' + user.full_name + '</strong> (' + user.role + ')</p>';
+          if (user.role === 'producer') {
+            const assets = await listMyAssets().catch(() => []);
+            html += '<h2 style="margin-top:2rem;">My Assets</h2>';
+            if (!assets || assets.length === 0) {
+              html += '<p>No assets yet. <a href="asset_form.html">Add your first asset</a>.</p>';
+            } else {
+              html += '<div class="card-grid mb-2">' + assets.map(a => `
+                <div class="card">
+                  <span class="badge badge-${a.asset_type}">${a.asset_type}</span>
+                  <h3>${a.capacity_kw} kW</h3>
+                  <div class="meta">${a.location} · ₹${a.price_per_unit}/unit</div>
+                  <a href="asset_form.html?id=${a.id}" class="btn btn-secondary" style="margin-top:0.5rem;display:inline-block;">Edit</a>
+                </div>
+              `).join('') + '</div>';
+            }
+            html += '<a href="asset_form.html" class="btn btn-primary">+ Add Asset</a>';
+          } else {
+            const interests = await listMyInterests().catch(() => []);
+            html += '<h2 style="margin-top:2rem;">My Interests</h2>';
+            if (!interests || interests.length === 0) {
+              html += '<p>No interests yet. <a href="marketplace.html">Browse the marketplace</a>.</p>';
+            } else {
+              html += '<p><a href="interests.html">View all interests</a></p>';
+            }
+          }
+          document.getElementById('content').innerHTML = html;
+        } catch (err) {
+          clearToken();
+          redirectToLogin();
+        }
+      })();
+    }
+  </script>
+</body>
+</html>

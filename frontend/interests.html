@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interests — Green Energy Market</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🌱 Green Energy Market</a>
+      <nav class="nav">
+        <a href="marketplace.html">Marketplace</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="interests.html">Interests</a>
+        <a href="#" id="logout" class="btn">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="alert" class="alert" style="display:none;"></div>
+    <h1 class="page-title">Interests</h1>
+    <div id="content">
+      <p>Loading...</p>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script>
+    function redirectToLogin() {
+      window.location.href = 'login.html';
+    }
+    document.getElementById('logout').addEventListener('click', (e) => {
+      e.preventDefault();
+      clearToken();
+      redirectToLogin();
+    });
+    if (!isLoggedIn()) {
+      redirectToLogin();
+    } else {
+      (async () => {
+        try {
+          const user = await getMe();
+          if (user.role === 'producer') {
+            const received = await listReceivedInterests().catch(() => []);
+            const html = received.length === 0
+              ? '<p>No received interests yet.</p>'
+              : `
+                <h2>Received Interests</h2>
+                <div class="table-wrap mb-2">
+                  <table>
+                    <thead><tr><th>ID</th><th>Asset ID</th><th>Message</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody>
+                      ${received.map(i => `
+                        <tr>
+                          <td>${i.id}</td>
+                          <td><a href="asset_detail.html?id=${i.asset_id}">#${i.asset_id}</a></td>
+                          <td>${i.message || '-'}</td>
+                          <td>${i.status}</td>
+                          <td>
+                            ${i.status === 'pending' ? `
+                              <button data-id="${i.id}" data-status="accepted" class="btn btn-primary" style="padding:0.25rem 0.5rem;font-size:0.85rem;">Accept</button>
+                              <button data-id="${i.id}" data-status="rejected" class="btn btn-secondary" style="padding:0.25rem 0.5rem;font-size:0.85rem;">Reject</button>
+                            ` : '-'}
+                          </td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              `;
+            document.getElementById('content').innerHTML = html;
+            document.querySelectorAll('[data-id]').forEach(btn => {
+              btn.addEventListener('click', async () => {
+                try {
+                  await updateInterestStatus(parseInt(btn.dataset.id), btn.dataset.status);
+                  location.reload();
+                } catch (err) {
+                  document.getElementById('alert').className = 'alert alert-error';
+                  document.getElementById('alert').textContent = err.message || 'Failed to update.';
+                  document.getElementById('alert').style.display = 'block';
+                }
+              });
+            });
+          } else {
+            const mine = await listMyInterests().catch(() => []);
+            const html = mine.length === 0
+              ? '<p>No interests yet. <a href="marketplace.html">Browse marketplace</a> to express interest.</p>'
+              : `
+                <h2>My Interests</h2>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>ID</th><th>Asset ID</th><th>Message</th><th>Status</th></tr></thead>
+                    <tbody>
+                      ${mine.map(i => `
+                        <tr>
+                          <td>${i.id}</td>
+                          <td><a href="asset_detail.html?id=${i.asset_id}">#${i.asset_id}</a></td>
+                          <td>${i.message || '-'}</td>
+                          <td>${i.status}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              `;
+            document.getElementById('content').innerHTML = html;
+          }
+        } catch (err) {
+          clearToken();
+          redirectToLogin();
+        }
+      })();
+    }
+  </script>
+</body>
+</html>
