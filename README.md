@@ -41,9 +41,10 @@ For the hackathon prototype, we focus on a **simple but end‑to‑end working m
   - Users can leave **1–5 star reviews** and comments on asset detail pages.
   - Reviews are persisted and shown below each asset.
 
-- **Simple payments demo**
-  - Accepted interests expose a **“Pay”** action that calls a payment checkout API.
-  - For the hackathon, this simulates a payment / checkout flow (no real money).
+- **Escrow payments**
+  - We use **escrow-style payments** so funds are held until delivery is confirmed, protecting both producers and consumers from scams.
+  - Accepted interests expose a **“Pay”** action that calls the payment checkout API.
+  - Full escrow implementation (hold → delivery confirmation → release) will be completed later today.
 
 - **Data is persisted**
   - All users, assets, interests, notifications, and reviews are stored in **SQLite** using **SQLAlchemy ORM**.
