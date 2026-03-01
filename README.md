@@ -263,3 +263,4 @@ This workflow keeps **frontend and backend work decoupled** while still aligning
 
 - Add **pricing analytics** (average tariffs, capacity utilization).
 
+by Execute Hackathon team - Abstergo Division IV
