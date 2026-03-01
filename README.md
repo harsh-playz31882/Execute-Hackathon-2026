@@ -17,22 +17,38 @@ For the hackathon prototype, we focus on a **simple but end‑to‑end working m
 
 - **User onboarding with roles**
   - Register as **Producer**, **Consumer**, or **Investor**.
-  - Secure login (FastAPI security).
+  - Secure login with JWT‑based auth (FastAPI security layer).
 
-- **Energy asset listings (Marketplace)**
+- **Energy asset listings & marketplace UI**
   - Producers can create and manage **energy assets**  
     (e.g., “10 kW rooftop solar in Pune, ₹5.5/unit”).
-  - Public marketplace endpoint to list/filter assets by **type** and **location**.
+  - Public marketplace with filters by **type** and **location** and a clean card‑based UI.
 
-- **Peer‑to‑peer trade intent**
+- **Role‑aware dashboards**
+  - Producers see **“My Assets”** and **received interests** with quick actions.
+  - Consumers/Investors see **their own interests** and can jump into the marketplace.
+
+- **Peer‑to‑peer trade intent & negotiation**
   - Consumers/Investors can **send “Interest”** messages on specific assets.
   - Producers can view all interests on their assets and mark them as  
     **pending / accepted / rejected**.
 
-- **Data is persisted**
-  - All users, assets, and interests are stored in **SQLite** using **SQLAlchemy ORM**.
+- **In‑app notifications**
+  - When a producer accepts an interest, the interested user receives a **notification**.
+  - Dedicated **Notifications** page with periodic refresh and unread badge in the nav.
 
-The focus is on a **clean, minimal API** and **clear separation of concerns**, so different team members can work independently on frontend and backend.
+- **Ratings & reviews**
+  - Users can leave **1–5 star reviews** and comments on asset detail pages.
+  - Reviews are persisted and shown below each asset.
+
+- **Simple payments demo**
+  - Accepted interests expose a **“Pay”** action that calls a payment checkout API.
+  - For the hackathon, this simulates a payment / checkout flow (no real money).
+
+- **Data is persisted**
+  - All users, assets, interests, notifications, and reviews are stored in **SQLite** using **SQLAlchemy ORM**.
+
+The focus is on a **clean, minimal API**, a **simple but modern frontend**, and **clear separation of concerns**, so different team members can work independently on frontend and backend.
 
 ---
 
@@ -72,10 +88,13 @@ The focus is on a **clean, minimal API** and **clear separation of concerns**, s
      - `/api/v1/auth` – auth & user profile
      - `/api/v1/assets` – asset CRUD + marketplace listing
      - `/api/v1/interests` – trade interest lifecycle
+     - `/api/v1/notifications` – in‑app notifications
+     - `/api/v1/reviews` – ratings & reviews
+     - `/api/v1/payments` – demo checkout flow
 
 5. **Database**
    - One SQLite database file: `energy_marketplace.db`.
-   - Three main tables: `users`, `energy_assets`, `trade_interests`.
+   - Five main tables: `users`, `energy_assets`, `trade_interests`, `notifications`, `reviews`.
 
 ---
 
@@ -98,6 +117,14 @@ The focus is on a **clean, minimal API** and **clear separation of concerns**, s
   - `id`, `asset_id`, `interested_user_id`, `message`, `status`, `created_at`
   - Connects **a consumer/investor** to **a producer asset**.
 
+- **Notification**
+  - `id`, `user_id`, `message`, `type`, `related_id`, `read`, `created_at`
+  - Stores in‑app events such as “interest accepted” for a given user.
+
+- **Review**
+  - `id`, `asset_id`, `user_id`, `rating`, `comment`, `created_at`
+  - Captures crowd feedback and quality signals on individual assets.
+
 This schema enables a **many‑to‑one** relationship from interests to assets and from assets to producers, modeling a peer‑to‑peer marketplace.
 
 ---
@@ -113,19 +140,35 @@ backend/
       security.py           # Password hashing, JWT create/verify, current user
     db/
       database.py           # SQLite engine, SessionLocal, Base, init_db()
-      models.py             # SQLAlchemy models (User, EnergyAsset, TradeInterest)
+      models.py             # SQLAlchemy models (User, EnergyAsset, TradeInterest, Notification, Review)
       schemas.py            # Pydantic schemas for requests/responses
-      crud.py               # DB operations for users, assets, interests
+      crud.py               # DB operations for users, assets, interests, notifications, reviews
     api/
       v1/
-        routes_auth.py      # /api/v1/auth – register, login, current user
-        routes_assets.py    # /api/v1/assets – marketplace + producer assets
-        routes_interests.py # /api/v1/interests – trade intent lifecycle
+        routes_auth.py         # /api/v1/auth – register, login, current user
+        routes_assets.py       # /api/v1/assets – marketplace + producer assets
+        routes_interests.py    # /api/v1/interests – trade intent lifecycle
+        routes_notifications.py# /api/v1/notifications – in‑app notifications
+        routes_reviews.py      # /api/v1/reviews – ratings & reviews
+        routes_payments.py     # /api/v1/payments – checkout / demo payments
     services/
       permissions.py        # Role & ownership checks (producer‑only actions)
+frontend/
+  index.html               # Landing page
+  login.html               # Sign‑in form
+  register.html            # Role‑aware registration
+  dashboard.html           # Role‑aware dashboard (producer vs consumer/investor)
+  marketplace.html         # Public marketplace listing with filters
+  asset_detail.html        # Asset details, reviews, and interest form
+  asset_form.html          # Add/Edit asset (producer only)
+  interests.html           # My interests / received interests
+  notifications.html       # In‑app notifications UI
+  css/main.css             # Shared styling
+  js/api.js                # API client helpers
+  js/ui.js                 # Toasts, badges, icons, etc.
 ```
 
-This structure keeps the **business logic, HTTP layer, and persistence layer cleanly separated**.
+This structure keeps the **business logic, HTTP layer, persistence layer, and frontend UI cleanly separated**.
 
 ---
 
@@ -165,7 +208,35 @@ This provides a **transparent, peer‑to‑peer discovery and matching mechanism
 
 ---
 
+### 8. Running the Project & Demo
 
+- **Prerequisites**
+  - Python 3.11+ and `pip`.
+
+- **Install dependencies**
+  - Create and activate a virtual environment (Windows PowerShell):
+    - `python -m venv .venv`
+    - `.\.venv\Scripts\activate`
+  - Install backend requirements:
+    - `pip install -r Requirements`
+
+- **Start the backend + frontend**
+  - From the project root, run:
+    - `uvicorn backend.app.main:app --reload`
+  - FastAPI will serve:
+    - **APIs** at `http://127.0.0.1:8000/api/v1/...`
+    - **Frontend** static files at `http://127.0.0.1:8000/` (e.g. `marketplace.html`, `dashboard.html`).
+  - Interactive API docs:
+    - `http://127.0.0.1:8000/docs`
+
+- **Suggested 3–5 minute demo script**
+  1. Register as a **Producer**, log in, and create an energy asset.
+  2. Log out; register/login as a **Consumer** or **Investor**.
+  3. Browse the **Marketplace**, open the asset detail, and **express interest**.
+  4. Log back in as the **Producer**, open **Interests**, and **accept** the pending interest.
+  5. As the consumer/investor, see the updated status, optionally hit **Pay** (demo checkout), and check the **Notifications** page.
+
+---
 
 ### 9. Team Workflow & Branching (Git)
 
